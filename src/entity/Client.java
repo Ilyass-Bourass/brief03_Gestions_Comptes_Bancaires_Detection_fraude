@@ -12,7 +12,6 @@ public record Client(
     LocalDateTime dateCreation
 ) {
     
-    // Constructeur compact simple
     public Client {
         if (nom == null || nom.trim().isEmpty()) {
             throw new IllegalArgumentException("Le nom ne peut pas être vide");
@@ -25,12 +24,11 @@ public record Client(
         }
     }
     
-    // Constructeur de convenance sans ID
+
     public Client(String nom, String prenom, String email, String telephone, String adresse) {
         this(0, nom, prenom, email, telephone, adresse, LocalDateTime.now());
     }
     
-    // Méthode utilitaire
     public String nomComplet() {
         return prenom + " " + nom;
     }

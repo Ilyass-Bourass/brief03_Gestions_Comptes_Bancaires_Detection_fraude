@@ -10,14 +10,11 @@ public class ConnexionDatabase {
     private static final String USER = "root";
     private static final String PASSWORD = "12345";
     
-    // Instance unique de la connexion (Singleton)
     private static Connection instance = null;
 
-    // Constructeur privé pour empêcher l'instanciation
     private ConnexionDatabase() {}
 
     public static Connection getConnection() {
-        // Si la connexion n'existe pas ou est fermée, on en crée une nouvelle
         try {
             if (instance == null || instance.isClosed()) {
                 instance = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -36,7 +33,6 @@ public class ConnexionDatabase {
         return instance;
     }
     
-    // Méthode pour fermer la connexion proprement
     public static void fermerConnexion() {
         try {
             if (instance != null && !instance.isClosed()) {
@@ -49,7 +45,6 @@ public class ConnexionDatabase {
         }
     }
     
-    // Méthode pour vérifier l'état de la connexion
     public static boolean estConnecte() {
         try {
             return instance != null && !instance.isClosed();

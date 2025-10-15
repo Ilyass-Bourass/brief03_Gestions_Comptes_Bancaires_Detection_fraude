@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/src/entity/Carte.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/entity/Carte.java" />
+              <option name="updatedContent" value="package entity;&#10;&#10;import java.time.LocalDate;&#10;&#10;public sealed abstract class Carte permits CarteDebit, CarteCredit, CartePrepayee {&#10;    private int idCarte;&#10;    private String numeroCarte;&#10;    private LocalDate dateExpiration;&#10;    private StatutCarte statut;&#10;    private int idClient;&#10;    &#10;    public Carte(int idCarte, String numeroCarte, LocalDate dateExpiration, StatutCarte statut, int idClient) {&#10;        this.idCarte = idCarte;&#10;        this.numeroCarte = numeroCarte;&#10;        this.dateExpiration = dateExpiration;&#10;        this.statut = statut;&#10;        this.idClient = idClient;&#10;    }&#10;    &#10;    public Carte(String numeroCarte, LocalDate dateExpiration, int idClient) {&#10;        this(0, numeroCarte, dateExpiration, StatutCarte.ACTIVE, idClient);&#10;    }&#10;    &#10;    // Getters&#10;    public int getIdCarte() {&#10;        return idCarte;&#10;    }&#10;    &#10;    public String getNumeroCarte() {&#10;        return numeroCarte;&#10;    }&#10;    &#10;    public LocalDate getDateExpiration() {&#10;        return dateExpiration;&#10;    }&#10;    &#10;    public StatutCarte getStatut() {&#10;        return statut;&#10;    }&#10;    &#10;    public int getIdClient() {&#10;        return idClient;&#10;    }&#10;    &#10;    // Setters&#10;    public void setIdCarte(int idCarte) {&#10;        this.idCarte = idCarte;&#10;    }&#10;    &#10;    public void setStatut(StatutCarte statut) {&#10;        this.statut = statut;&#10;    }&#10;    &#10;    public abstract String getTypeCarte();&#10;    &#10;    public boolean estActive() {&#10;        return statut == StatutCarte.ACTIVE &amp;&amp; dateExpiration.isAfter(LocalDate.now());&#10;    }&#10;    &#10;    public void activer() {&#10;        this.statut = StatutCarte.ACTIVE;&#10;    }&#10;    &#10;    public void bloquer() {&#10;        this.statut = StatutCarte.BLOQUEE;&#10;    }&#10;    &#10;    public void suspendre() {&#10;        this.statut = StatutCarte.SUSPENDUE;&#10;    }&#10;}&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/entity/CarteCredit.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/entity/CarteCredit.java" />
+              <option name="updatedContent" value="package entity;&#10;&#10;import java.time.LocalDate;&#10;&#10;public final class CarteCredit extends Carte {&#10;    private double plafondMensuel;&#10;    private double tauxInteret;&#10;    &#10;    public CarteCredit(int idCarte, String numeroCarte, LocalDate dateExpiration, StatutCarte statut, int idClient, double plafondMensuel, double tauxInteret) {&#10;        super(idCarte, numeroCarte, dateExpiration, statut, idClient);&#10;        this.plafondMensuel = plafondMensuel;&#10;        this.tauxInteret = tauxInteret;&#10;    }&#10;    &#10;    public CarteCredit(String numeroCarte, LocalDate dateExpiration, int idClient, double plafondMensuel, double tauxInteret) {&#10;        super(numeroCarte, dateExpiration, idClient);&#10;        this.plafondMensuel = plafondMensuel;&#10;        this.tauxInteret = tauxInteret;&#10;    }&#10;    &#10;    public double getPlafondMensuel() {&#10;        return plafondMensuel;&#10;    }&#10;    &#10;    public void setPlafondMensuel(double plafondMensuel) {&#10;        this.plafondMensuel = plafondMensuel;&#10;    }&#10;    &#10;    public double getTauxInteret() {&#10;        return tauxInteret;&#10;    }&#10;    &#10;    public void setTauxInteret(double tauxInteret) {&#10;        this.tauxInteret = tauxInteret;&#10;    }&#10;    &#10;    @Override&#10;    public String getTypeCarte() {&#10;        return &quot;CREDIT&quot;;&#10;    }&#10;}&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/entity/CarteDebit.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/entity/CarteDebit.java" />
+              <option name="updatedContent" value="package entity;&#10;&#10;import java.time.LocalDate;&#10;&#10;public final class CarteDebit extends Carte {&#10;    private double plafondJournalier;&#10;    &#10;    public CarteDebit(int idCarte, String numeroCarte, LocalDate dateExpiration, StatutCarte statut, int idClient, double plafondJournalier) {&#10;        super(idCarte, numeroCarte, dateExpiration, statut, idClient);&#10;        this.plafondJournalier = plafondJournalier;&#10;    }&#10;    &#10;    public CarteDebit(String numeroCarte, LocalDate dateExpiration, int idClient, double plafondJournalier) {&#10;        super(numeroCarte, dateExpiration, idClient);&#10;        this.plafondJournalier = plafondJournalier;&#10;    }&#10;    &#10;    public double getPlafondJournalier() {&#10;        return plafondJournalier;&#10;    }&#10;    &#10;    public void setPlafondJournalier(double plafondJournalier) {&#10;        this.plafondJournalier = plafondJournalier;&#10;    }&#10;    &#10;    @Override&#10;    public String getTypeCarte() {&#10;        return &quot;DEBIT&quot;;&#10;    }&#10;}&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/entity/CartePrepayee.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/entity/CartePrepayee.java" />
+              <option name="updatedContent" value="package entity;&#10;&#10;import java.time.LocalDate;&#10;&#10;public final class CartePrepayee extends Carte {&#10;    private double soldeDisponible;&#10;    &#10;    public CartePrepayee(int idCarte, String numeroCarte, LocalDate dateExpiration, StatutCarte statut, int idClient, double soldeDisponible) {&#10;        super(idCarte, numeroCarte, dateExpiration, statut, idClient);&#10;        this.soldeDisponible = soldeDisponible;&#10;    }&#10;    &#10;    public CartePrepayee(String numeroCarte, LocalDate dateExpiration, int idClient, double soldeDisponible) {&#10;        super(numeroCarte, dateExpiration, idClient);&#10;        this.soldeDisponible = soldeDisponible;&#10;    }&#10;    &#10;    public double getSoldeDisponible() {&#10;        return soldeDisponible;&#10;    }&#10;    &#10;    public void setSoldeDisponible(double soldeDisponible) {&#10;        this.soldeDisponible = soldeDisponible;&#10;    }&#10;    &#10;    public void crediter(double montant) {&#10;        if (montant &gt; 0) {&#10;            this.soldeDisponible += montant;&#10;        }&#10;    }&#10;    &#10;    public boolean debiter(double montant) {&#10;        if (montant &gt; 0 &amp;&amp; soldeDisponible &gt;= montant) {&#10;            this.soldeDisponible -= montant;&#10;            return true;&#10;        }&#10;        return false;&#10;    }&#10;    &#10;    @Override&#10;    public String getTypeCarte() {&#10;        return &quot;PREPAYEE&quot;;&#10;    }&#10;}&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/entity/NiveauAlerte.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/entity/NiveauAlerte.java" />
+              <option name="updatedContent" value="package entity;&#10;&#10;public enum NiveauAlerte {&#10;    INFO,&#10;    AVERTISSEMENT,&#10;    CRITIQUE&#10;}&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/entity/OperationCarte.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/entity/OperationCarte.java" />
+              <option name="updatedContent" value="package entity;&#10;&#10;import java.time.LocalDateTime;&#10;&#10;public record OperationCarte(&#10;    int idOperation,&#10;    LocalDateTime date,&#10;    double montant,&#10;    TypeOperation type,&#10;    String lieu,&#10;    int idCarte&#10;) {&#10;    public OperationCarte {&#10;        if (montant &lt;= 0) {&#10;            throw new IllegalArgumentException(&quot;Le montant doit être positif&quot;);&#10;        }&#10;        if (type == null) {&#10;            throw new IllegalArgumentException(&quot;Le type d'opération est obligatoire&quot;);&#10;        }&#10;    }&#10;    &#10;    public OperationCarte(double montant, TypeOperation type, String lieu, int idCarte) {&#10;        this(0, LocalDateTime.now(), montant, type, lieu, idCarte);&#10;    }&#10;}&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/entity/StatutCarte.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/entity/StatutCarte.java" />
+              <option name="updatedContent" value="package entity;&#10;&#10;public enum StatutCarte {&#10;    ACTIVE,&#10;    SUSPENDUE,&#10;    BLOQUEE,&#10;    EXPIREE&#10;}&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/entity/TypeOperation.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/entity/TypeOperation.java" />
+              <option name="updatedContent" value="package entity;&#10;&#10;public enum TypeOperation {&#10;    ACHAT,&#10;    RETRAIT,&#10;    PAIEMENT_EN_LIGNE&#10;}&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

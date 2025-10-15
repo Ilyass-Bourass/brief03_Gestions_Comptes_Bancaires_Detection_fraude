@@ -11,7 +11,6 @@ import java.util.Optional;
 
 public class ClientDAO {
     
-    // Créer un nouveau client
     public boolean creer(Client client) {
         String sql = "INSERT INTO clients (nom, prenom, email, telephone, adresse, date_creation) VALUES (?, ?, ?, ?, ?, ?)";
         Connection connection = ConnexionDatabase.getConnection();
@@ -37,7 +36,6 @@ public class ClientDAO {
         }
     }
     
-    // Trouver un client par ID
     public Optional<Client> trouverParId(int id) {
         String sql = "SELECT * FROM clients WHERE id_client = ?";
         Connection connection = ConnexionDatabase.getConnection();
@@ -61,7 +59,6 @@ public class ClientDAO {
         return Optional.empty();
     }
     
-    // Trouver un client par email
     public Optional<Client> trouverParEmail(String email) {
         String sql = "SELECT * FROM clients WHERE email = ?";
         Connection connection = ConnexionDatabase.getConnection();
@@ -85,7 +82,6 @@ public class ClientDAO {
         return Optional.empty();
     }
     
-    // Lister tous les clients
     public List<Client> listerTous() {
         List<Client> clients = new ArrayList<>();
         String sql = "SELECT * FROM clients ORDER BY nom, prenom";
@@ -109,7 +105,6 @@ public class ClientDAO {
         return clients;
     }
     
-    // Mettre à jour un client
     public boolean mettreAJour(Client client) {
         String sql = "UPDATE clients SET nom = ?, prenom = ?, email = ?, telephone = ?, adresse = ? WHERE id_client = ?";
         Connection connection = ConnexionDatabase.getConnection();
@@ -134,7 +129,6 @@ public class ClientDAO {
         }
     }
     
-    // Supprimer un client
     public boolean supprimer(int id) {
         String sql = "DELETE FROM clients WHERE id_client = ?";
         Connection connection = ConnexionDatabase.getConnection();
@@ -153,7 +147,6 @@ public class ClientDAO {
         }
     }
     
-    // Rechercher des clients par nom ou prénom
     public List<Client> rechercherParNom(String recherche) {
         List<Client> clients = new ArrayList<>();
         String sql = "SELECT * FROM clients WHERE nom LIKE ? OR prenom LIKE ? ORDER BY nom, prenom";
@@ -180,7 +173,6 @@ public class ClientDAO {
         return clients;
     }
     
-    // Vérifier si un email existe déjă
     public boolean emailExiste(String email) {
         String sql = "SELECT COUNT(*) FROM clients WHERE email = ?";
         Connection connection = ConnexionDatabase.getConnection();
@@ -204,7 +196,6 @@ public class ClientDAO {
         return false;
     }
     
-    // Méthode utilitaire pour mapper ResultSet vers Client
     private Client mapperClient(ResultSet rs) throws SQLException {
         return new Client(
             rs.getInt("id_client"),
