@@ -1,6 +1,7 @@
 import configDatabase.ConnexionDatabase;
 import service.ClientService;
 import service.CarteService;
+import service.CompteService;
 import entity.Client;
 
 import java.sql.Connection;
@@ -20,6 +21,7 @@ public class Main {
         
         ClientService clientService = new ClientService();
         CarteService carteService = new CarteService();
+        CompteService compteService = new CompteService();
         Scanner scanner = new Scanner(System.in);
         
         while (true) {
@@ -44,6 +46,12 @@ public class Main {
                     break;
                 case 5:
                     creerNouvelleCarte(carteService, scanner);
+                    break;
+                case 6:
+                    creerNouveauCompte(compteService, scanner);
+                    break;
+                case 7:
+                    afficherComptesClient(compteService, scanner);
                     break;
                 case 0:
                     System.out.println("👋 Au revoir !");
@@ -178,5 +186,53 @@ public class Main {
         if (!resultat && typeCarte >= 1 && typeCarte <= 3) {
             System.out.println("❌ Échec de la création de la carte.");
         }
+    }
+
+    private static void creerNouveauCompte(CompteService compteService, Scanner scanner) {
+        System.out.println("\n🏦 Création d'un compte bancaire");
+        System.out.println("-".repeat(40));
+
+        System.out.print("ID du client : ");
+        int idClient = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("\nType de compte :");
+        System.out.println("1. Compte Courant");
+        System.out.println("2. Compte Épargne");
+        System.out.print("Choisissez le type : ");
+        int typeCompte = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Solde initial (MAD) : ");
+        double soldeInitial = scanner.nextDouble();
+        scanner.nextLine();
+
+        boolean resultat = false;
+
+        switch (typeCompte) {
+            case 1:
+                resultat = compteService.creerCompte(idClient, entity.TypeCompte.COURANT, soldeInitial);
+                break;
+            case 2:
+                resultat = compteService.creerCompte(idClient, entity.TypeCompte.EPARGNE, soldeInitial);
+                break;
+            default:
+                System.out.println("❌ Type de compte invalide !");
+        }
+
+        if (!resultat && typeCompte >= 1 && typeCompte <= 2) {
+            System.out.println("❌ Échec de la création du compte.");
+        }
+    }
+
+    private static void afficherComptesClient(CompteService compteService, Scanner scanner) {
+        System.out.println("\n🏦 Affichage des comptes d'un client");
+        System.out.println("-".repeat(40));
+
+        System.out.print("ID du client : ");
+        int idClient = scanner.nextInt();
+        scanner.nextLine();
+
+        compteService.afficherComptesClient(idClient);
     }
 }
