@@ -1,5 +1,6 @@
 import configDatabase.ConnexionDatabase;
 import service.ClientService;
+import service.CarteService;
 import entity.Client;
 
 import java.sql.Connection;
@@ -18,6 +19,7 @@ public class Main {
         System.out.println("✅ Connexion à la base de données réussie !");
         
         ClientService clientService = new ClientService();
+        CarteService carteService = new CarteService();
         Scanner scanner = new Scanner(System.in);
         
         while (true) {
@@ -40,6 +42,9 @@ public class Main {
                 case 4:
                     rechercherClient(clientService, scanner);
                     break;
+                case 5:
+                    creerNouvelleCarte(carteService, scanner);
+                    break;
                 case 0:
                     System.out.println("👋 Au revoir !");
                     scanner.close();
@@ -58,6 +63,7 @@ public class Main {
         System.out.println("2. Afficher tous les clients");
         System.out.println("3. Créer des clients d'exemple");
         System.out.println("4. Rechercher un client");
+        System.out.println("5. Créer une carte bancaire");
         System.out.println("0. Quitter");
         System.out.println("=".repeat(40));
     }
@@ -105,6 +111,59 @@ public class Main {
             for (Client client : clients) {
                 System.out.printf("- %s (%s)%n", client.nomComplet(), client.email());
             }
+        }
+    }
+
+    private static void creerNouvelleCarte(CarteService carteService, Scanner scanner) {
+        System.out.println("\n💳 Création d'une carte bancaire");
+        System.out.println("-".repeat(40));
+
+        System.out.print("ID du client : ");
+        int idClient = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("\nType de carte :");
+        System.out.println("1. Carte Débit");
+        System.out.println("2. Carte Crédit");
+        System.out.println("3. Carte Prépayée");
+        System.out.print("Choisissez le type : ");
+        int typeCarte = scanner.nextInt();
+        scanner.nextLine();
+
+        boolean resultat = false;
+
+        switch (typeCarte) {
+            case 1:
+                System.out.print("Plafond journalier (MAD) : ");
+                double plafondJournalier = scanner.nextDouble();
+                scanner.nextLine();
+                resultat = carteService.creerCarteDebit(idClient, plafondJournalier);
+                break;
+
+            case 2:
+                System.out.print("Plafond mensuel (MAD) : ");
+                double plafondMensuel = scanner.nextDouble();
+                scanner.nextLine();
+
+                System.out.print("Taux d'intérêt (%) : ");
+                double tauxInteret = scanner.nextDouble();
+                scanner.nextLine();
+                resultat = carteService.creerCarteCredit(idClient, plafondMensuel, tauxInteret);
+                break;
+
+            case 3:
+                System.out.print("Solde initial (MAD) : ");
+                double soldeInitial = scanner.nextDouble();
+                scanner.nextLine();
+                resultat = carteService.creerCartePrepayee(idClient, soldeInitial);
+                break;
+
+            default:
+                System.out.println("❌ Type de carte invalide !");
+        }
+
+        if (!resultat && typeCarte >= 1 && typeCarte <= 3) {
+            System.out.println("❌ Échec de la création de la carte.");
         }
     }
 }

@@ -1,4 +1,3 @@
-
 CREATE DATABASE IF NOT EXISTS gestion_cartes_bancaires;
 USE gestion_cartes_bancaires;
 
@@ -26,38 +25,38 @@ CREATE TABLE comptes (
 CREATE TABLE cartes (
     id_carte INT PRIMARY KEY AUTO_INCREMENT,
     numero_carte VARCHAR(16) UNIQUE NOT NULL,
-    id_compte INT NOT NULL,
-    type_carte ENUM('DEBIT', 'CREDIT') NOT NULL,
     date_expiration DATE NOT NULL,
-    code_cvv VARCHAR(3) NOT NULL,
-    limite_journaliere DECIMAL(10,2) DEFAULT 1000.00,
-    statut ENUM('ACTIVE', 'BLOQUEE', 'EXPIREE') DEFAULT 'ACTIVE',
+    statut ENUM('ACTIVE', 'SUSPENDUE', 'BLOQUEE', 'EXPIREE') DEFAULT 'ACTIVE',
+    type_carte ENUM('DEBIT', 'CREDIT', 'PREPAYEE') NOT NULL,
+    id_client INT NOT NULL,
+    plafond_journalier DECIMAL(10,2) NULL,
+    plafond_mensuel DECIMAL(10,2) NULL,
+    taux_interet DECIMAL(5,2) NULL,
+    solde_disponible DECIMAL(10,2) NULL,
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_compte) REFERENCES comptes(id_compte)
+    FOREIGN KEY (id_client) REFERENCES clients(id_client)
 );
 
-CREATE TABLE transactions (
-    id_transaction INT PRIMARY KEY AUTO_INCREMENT,
-    id_carte INT NOT NULL,
+CREATE TABLE operations_carte (
+    id_operation INT PRIMARY KEY AUTO_INCREMENT,
+    date DATETIME NOT NULL,
     montant DECIMAL(10,2) NOT NULL,
-    type_transaction ENUM('RETRAIT', 'ACHAT', 'VIREMENT') NOT NULL,
-    lieu_transaction VARCHAR(200),
-    date_transaction DATETIME DEFAULT CURRENT_TIMESTAMP,
-    statut ENUM('REUSSIE', 'ECHOUEE', 'SUSPECTE') DEFAULT 'REUSSIE',
+    type ENUM('ACHAT', 'RETRAIT', 'PAIEMENT_EN_LIGNE') NOT NULL,
+    lieu VARCHAR(200),
+    id_carte INT NOT NULL,
     FOREIGN KEY (id_carte) REFERENCES cartes(id_carte)
 );
 
 CREATE TABLE alertes_fraude (
     id_alerte INT PRIMARY KEY AUTO_INCREMENT,
-    id_transaction INT NOT NULL,
-    type_alerte ENUM('MONTANT_SUSPECT', 'LOCALISATION_INHABITUELLE', 'FREQUENCE_ELEVEE') NOT NULL,
-    niveau_risque ENUM('FAIBLE', 'MOYEN', 'ELEVE') NOT NULL,
-    description TEXT,
+    description TEXT NOT NULL,
+    niveau ENUM('INFO', 'AVERTISSEMENT', 'CRITIQUE') NOT NULL,
+    id_carte INT NOT NULL,
     date_alerte DATETIME DEFAULT CURRENT_TIMESTAMP,
-    traite BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (id_transaction) REFERENCES transactions(id_transaction)
+    FOREIGN KEY (id_carte) REFERENCES cartes(id_carte)
 );
 
+-- Données de test
 INSERT INTO clients (nom, prenom, email, telephone, adresse) VALUES
 ('Alami', 'Mohammed', 'mohammed.alami@email.com', '0612345678', 'Casablanca, Maroc'),
 ('Bennani', 'Fatima', 'fatima.bennani@email.com', '0687654321', 'Rabat, Maroc');
@@ -65,7 +64,3 @@ INSERT INTO clients (nom, prenom, email, telephone, adresse) VALUES
 INSERT INTO comptes (numero_compte, id_client, type_compte, solde) VALUES
 ('ACC001234567890', 1, 'COURANT', 5000.00),
 ('ACC987654321098', 2, 'EPARGNE', 12000.00);
-
-INSERT INTO cartes (numero_carte, id_compte, type_carte, date_expiration, code_cvv, limite_journaliere) VALUES
-('1234567890123456', 1, 'DEBIT', '2027-12-31', '123', 2000.00),
-('6543210987654321', 2, 'CREDIT', '2026-08-31', '456', 3000.00);
