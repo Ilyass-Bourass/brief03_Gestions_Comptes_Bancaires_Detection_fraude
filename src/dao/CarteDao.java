@@ -5,6 +5,8 @@ import configDatabase.ConnexionDatabase;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CarteDao {
 
@@ -57,5 +59,48 @@ public class CarteDao {
             System.err.println("❌ Erreur lors de la création de la carte : " + e.getMessage());
             return false;
         }
+    }
+
+    public List<Carte> trouverParClient(int idClient) {
+        List<Carte> cartes = new ArrayList<>();
+        String sql = "SELECT * FROM cartes WHERE id_client = ?";
+        Connection connection = ConnexionDatabase.getConnection();
+
+        if (connection == null) {
+            return cartes;
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, idClient);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                cartes.add(mapResultSetToCarte(rs));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur lors de la recherche : " + e.getMessage());
+        }
+
+        return cartes;
+    }
+
+    private Carte mapResultSetToCarte(ResultSet rs) throws SQLException {
+        int idCarte = rs.getInt("id_carte");
+        String numeroCarte = rs.getString("numero_carte");
+        LocalDate dateExpiration = rs.getDate("date_expiration").toLocalDate();
+        StatutCarte statut = StatutCarte.valueOf(rs.getString("statut"));
+        int idClient = rs.getInt("id_client");
+        String typeCarte = rs.getString("type_carte");
+
+        return switch (typeCarte) {
+            case "DEBIT" -> new CarteDebit(idCarte, numeroCarte, dateExpiration, statut, idClient,
+                    rs.getDouble("plafond_journalier"));
+            case "CREDIT" -> new CarteCredit(idCarte, numeroCarte, dateExpiration, statut, idClient,
+                    rs.getDouble("plafond_mensuel"), rs.getDouble("taux_interet"));
+            case "PREPAYEE" -> new CartePrepayee(idCarte, numeroCarte, dateExpiration, statut, idClient,
+                    rs.getDouble("solde_disponible"));
+            default -> throw new SQLException("Type de carte inconnu : " + typeCarte);
+        };
     }
 }

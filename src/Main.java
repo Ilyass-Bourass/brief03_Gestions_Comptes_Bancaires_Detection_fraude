@@ -37,7 +37,7 @@ public class Main {
                     clientService.afficherTousLesClients();
                     break;
                 case 3:
-                    System.out.println("Créer exepmle de client");
+                    afficherCartesClient(carteService, scanner);
                     break;
                 case 4:
                     rechercherClient(clientService, scanner);
@@ -61,9 +61,11 @@ public class Main {
         System.out.println("=".repeat(40));
         System.out.println("1. Créer un nouveau client");
         System.out.println("2. Afficher tous les clients");
-        System.out.println("3. Créer des clients d'exemple");
+        System.out.println("3. Afficher toutes les cartes pour un client");
         System.out.println("4. Rechercher un client");
         System.out.println("5. Créer une carte bancaire");
+        System.out.println("6. Créer un compte pour un client");
+        System.out.println("7. affichages des comptes d'un client");
         System.out.println("0. Quitter");
         System.out.println("=".repeat(40));
     }
@@ -112,6 +114,17 @@ public class Main {
                 System.out.printf("- %s (%s)%n", client.nomComplet(), client.email());
             }
         }
+    }
+
+    private static void afficherCartesClient(CarteService carteService, Scanner scanner) {
+        System.out.println("\n💳 Affichage des cartes d'un client");
+        System.out.println("-".repeat(40));
+
+        System.out.print("ID du client : ");
+        int idClient = scanner.nextInt();
+        scanner.nextLine();
+
+        carteService.afficherCartesClient(idClient);
     }
 
     private static void creerNouvelleCarte(CarteService carteService, Scanner scanner) {
